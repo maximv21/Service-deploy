@@ -1,0 +1,148 @@
+  
+<mat-toolbar>
+  <span>Albums</span>
+  <span class="material-icons" (click)="create()">
+add 
+</span>
+</mat-toolbar> 
+
+
+<div class="loader" [class.spin]="spin" ></div>
+  <!-- Position Column -->
+<table mat-table [dataSource]="itemsList" class="mat-elevation-z8">
+
+
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.data.name}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="band">
+    <th mat-header-cell *matHeaderCellDef> Band </th>
+    <td mat-cell *matCellDef="let element"> {{element.data.band}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="label">
+    <th mat-header-cell *matHeaderCellDef> Label </th>
+    <td mat-cell *matCellDef="let element"> {{element.data.label}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="genre">
+    <th mat-header-cell *matHeaderCellDef> Genre </th>
+    <td mat-cell *matCellDef="let element"> {{element.data.genre}} </td>
+  </ng-container>
+ <ng-container matColumnDef="producer">
+    <th mat-header-cell *matHeaderCellDef> Producer </th>
+    <td mat-cell *matCellDef="let element"> {{element.data.producer}} </td>
+ 
+ </ng-container>
+ <ng-container matColumnDef="edit">
+<th mat-header-cell *matHeaderCellDef> Edit </th>
+    <td mat-cell *matCellDef="let element"> <span class="material-icons" (click)="fill(element)">
+		create</span> </td>
+		
+ </ng-container>	
+  <ng-container matColumnDef="del">
+    <th mat-header-cell *matHeaderCellDef> Delete </th>
+    <td mat-cell *matCellDef="let element"> <span class="material-icons" (click)="deleteWarn(element.id)"> 
+			delete</span> </td>
+		
+ </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+
+<div id="form-wrapper" [class.visible]="visible">
+	<form [formGroup]="myForm"(ngSubmit)="subm()" novalidate>
+
+		 
+	<h2>Add Album</h2>
+        <mat-form-field  class="form-group">
+		<mat-label>Name</mat-label>
+            <input matInput  class="form-control"  name="name" formControlName="name" />
+			
+		
+		</mat-form-field >
+		<mat-form-field  class="form-group">
+		<mat-label>Band</mat-label>
+            <input matInput class="form-control" name="name" formControlName="band" />
+			
+		</mat-form-field>
+		<mat-form-field class=" form-group" formArrayName="label">
+  <mat-chip-list #label aria-label="Label">
+		  <mat-chip *ngFor="let label of labelsFormArray.controls; let i = index" [selectable]="selectable"
+             [removable]="removable" (removed)="remove(labelsFormArray,i)">
+				{{label.value}}
+			<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+		  </mat-chip>
+    <input placeholder="Labels"
+           [matChipInputFor]="label"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           (matChipInputTokenEnd)="add(labelsFormArray,$event)"
+		   >
+  </mat-chip-list>
+</mat-form-field>
+
+
+ <mat-form-field class=" form-group">
+	<mat-chip-list #genre aria-label="Genres">
+		<mat-chip *ngFor="let genre of genresFormArray.controls; let i = index" [selectable]="selectable"
+		
+             [removable]="removable" (removed)="remove(genresFormArray,i)">
+				{{genre.value}}
+			<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+		</mat-chip>
+    <input placeholder="Genres"
+           [matChipInputFor]="genre"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           (matChipInputTokenEnd)="add(genresFormArray,$event)"
+		   >
+     </mat-chip-list>
+ </mat-form-field>
+ <mat-form-field class=" form-group">
+    <mat-chip-list #producer aria-label="producer">
+        <mat-chip *ngFor="let producer of producersFormArray.controls; let i = index" [selectable]="selectable"
+             [removable]="removable" (removed)="remove(producersFormArray,i)">
+		{{producer.value}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+		</mat-chip>
+    <input placeholder="Producers"
+           [matChipInputFor]="producer"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           (matChipInputTokenEnd)="add(producersFormArray,$event)">
+	</mat-chip-list>
+  </mat-form-field>
+	
+	<mat-error class="red" *ngIf="(myForm.touched||myForm.dirty)&&myForm.invalid">Please input the data 
+	</mat-error>   
+	
+		 
+		<div class="ok-del">
+			<button mat-raised-button type="button"(click)="cancel()">Cancel
+			</button>
+			<button mat-raised-button class="submit" [disabled]="myForm.invalid">Ok
+            </button>
+		</div>
+			
+	</form>			 
+</div>
+<div class="del-wrap"[class.visibleDel]="visibleDel">
+		<div>
+				Do Yoy really want to delete the data?
+		<div>
+			<button mat-raised-button type="button"(click)="cancelDel()">Cancel</button>
+			<button mat-raised-button  (click)="delete()">Ok</button></div>
+		 </div>	
+		 
+	</div>
+		 
+		 		 

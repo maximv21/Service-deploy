@@ -1,0 +1,122 @@
+<mat-toolbar>
+  <span>Pokemons</span>
+  <span class="material-icons" (click)="create()">
+add 
+</span>
+</mat-toolbar> 
+<div class="loader" [class.spin]="spin" ></div>            
+
+<div class="loader"></div>
+
+<table>
+  <thead>
+		<tr>
+			<th *ngFor="let  i of displayedColumns"> {{i}} 
+			</th>
+      
+		</tr> 
+	</thead>
+	 <tbody>
+    <tr *ngFor="let item of pokeList; let i = index">
+		<td *ngFor="let  a of displayedColumns">
+		{{item.data[a]}}
+		</td>
+		<td>
+			<span class="material-icons" (click)="fill(item)"><!-- item-->
+			create
+			</span>
+		</td>
+		<td>
+			<span class="material-icons"(click)="deleteWarn(item.id)">
+			delete
+			</span>
+		</td>
+	</tr>
+	</tbody>
+  
+</table>
+
+ 
+
+
+
+<div id="form-wrapper" [class.visible]="visible">
+  <form [formGroup]="myForm" (ngSubmit)="subm()"novalidate>
+
+		 
+	<h2>Add Album</h2>
+        <mat-form-field  class="form-group">
+			<mat-label>Name</mat-label>
+				<input matInput  class="form-control"  name="name" formControlName="name" />
+			
+		
+		</mat-form-field >
+			<mat-form-field  class="form-group">
+			<mat-label>Weight</mat-label>
+				<input matInput class="form-control" name="weight" formControlName="weight" />
+	
+		</mat-form-field>
+		<mat-form-field  class="form-group">
+			<mat-label>Attack</mat-label>
+				<input matInput class="form-control" name="attack" formControlName="attack" />
+			
+		</mat-form-field>
+
+
+		<mat-form-field  class="form-group">
+			<mat-label>Experience</mat-label>
+				<input matInput class="form-control" name="experience" formControlName="experience" />
+			
+		</mat-form-field>
+ 
+	<mat-form-field class=" form-group">
+		<mat-chip-list #abil aria-label="Fruit selection">
+		<mat-chip *ngFor="let abil of abilFormArray.controls; let i = index" [selectable]="selectable"
+             [removable]="removable" (removed)="remove(abilFormArray,i)">
+				{{abil.value}}
+			<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+		</mat-chip>
+	         
+    <input placeholder="Abilities"
+           [matChipInputFor]="abil"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           (matChipInputTokenEnd)="add(abilFormArray,$event)">
+		</mat-chip-list>
+	</mat-form-field>
+	
+		<mat-error class="red" *ngIf="myForm.touched&&myForm.invalid">Please fill all the items
+         </mat-error>   
+		<mat-error class="red" *ngIf="this.myForm.get('weight').hasError('digits')&&
+			(this.myForm.get('weight').touched||this.myForm.get('weight').dirty)">Weight only numbers
+		</mat-error>
+		<mat-error class="red" *ngIf="this.myForm.get('attack').hasError('digits')&&
+			(this.myForm.get('attack').touched||this.myForm.get('attack').dirty)">Attack only numbers
+		</mat-error>	
+		<mat-error class="red" *ngIf="this.myForm.get('experience').hasError('digits')&&
+					(this.myForm.get('experience').touched||this.myForm.get('experience').dirty)">Experiecnce only numbers
+		</mat-error>	
+		<div class="ok-del">
+			<button mat-raised-button type="button"(click)="cancel()">Cancel
+			</button>
+			<button mat-raised-button class="subm"[disabled]="myForm.invalid" >Ok
+            </button>
+			
+		</div>
+			
+	</form>			 
+</div>
+<div class="del-wrap"[class.visibleDel]="visibleDel">
+			<div>
+				Do Yoy really want to delete the data?
+				<div>
+					<button mat-raised-button type="button"(click)="cancelDel()">Cancel
+					</button>
+					<button mat-raised-button  (click)="delete()">Ok
+					</button>
+				</div>
+			</div>	
+		 
+</div>
+		 
+		 
